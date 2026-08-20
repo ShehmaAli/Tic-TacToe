@@ -1,7 +1,9 @@
+# the grid made for the tic-tac-toe
 grid = [["1", "2", "3"],
         ["4", "5", "6"],
         ["7", "8", "9"]]
 
+# All the winning combinations that could be like having like the winning combination
 winning_combination = [
     # Rows
     [(0, 0), (0, 1), (0, 2)],
@@ -35,6 +37,7 @@ def check_tie():
     return True
 
 
+# function to print the grid for the tic-tac-toe
 def print_grid():
     print(grid[0])
     print("...............")
@@ -44,40 +47,51 @@ def print_grid():
 
 
 def reset_grid():
-    grid = [["1", "2", "3"],
+    return [["1", "2", "3"],
             ["4", "5", "6"],
             ["7", "8", "9"]]
-    return grid
 
 
+
+#
 def put_letter(ltr, pos):
-    if pos == "1" and grid[0][0] == "1":
-        grid[0][0] = ltr
-    if pos == "2" and grid[0][1] == "2":
-        grid[0][1] = ltr
-    if pos == "3" and grid[0][2] == "3":
-        grid[0][2] = ltr
-    if pos == "4" and grid[1][0] == "4":
-        grid[1][0] = ltr
-    if pos == "5" and grid[1][1] == "5":
-        grid[1][1] = ltr
-    if pos == "6" and grid[1][2] == "6":
-        grid[1][2] = ltr
-    if pos == "7" and grid[2][0] == "7":
-        grid[2][0] = ltr
-    if pos == "8" and grid[2][1] == "8":
-        grid[2][1] = ltr
-    if pos == "9" and grid[2][2] == "9":
-        grid[2][2] = ltr
+    positions = {
+        "1": (0,0),
+        "2": (0,1),
+        "3": (0,2),
+        "4": (1,0),
+        "5": (1,1),
+        "6": (1,2),
+        "7": (2,0),
+        "8": (2,1),
+        "9": (2,2)
+    }
+    if pos not in positions:
+        return False
+
+    row, column = positions[pos]
+
+    if grid[row][column] != pos:
+        return False
+
+    grid[row][column] = ltr
+    return True
 
 
+
+
+# the main function for like tic-tac-toe
+# this is going to have like the whole tic-tac-toe in it
 def tic_tac_toe():
     Notwin = True
     while Notwin:
         print_grid()
         Xpos = input("choose where to put X:")
-        put_letter("X", Xpos)
-
+        if not put_letter("X", Xpos):
+            print_grid()
+            print("please choose correct value")
+            Xpos2 = input("choose where to put X:")
+            put_letter("X", Xpos2)
         if check_win("X"):
             print("X wins")
             break
@@ -86,7 +100,11 @@ def tic_tac_toe():
             break
         print_grid()
         Opos = input("choose where to put O:")
-        put_letter("O", Opos)
+        if not put_letter("O", Opos):
+            print_grid()
+            print("please choose correct value")
+            Opos2 = input("choose where to put O:")
+            put_letter("O", Opos2)
         if check_win("O"):
             print("O wins")
             break
@@ -122,3 +140,10 @@ if match_style == "2":
         print(f"| Tie     | {ties} |")
 
         grid = reset_grid()
+
+    if Xpoints > Opoints:
+        print("x wins")
+    if Opoints > Xpoints:
+        print("O wins")
+    if Xpoints == Opoints:
+        print("its a draw")
