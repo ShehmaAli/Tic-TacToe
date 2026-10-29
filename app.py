@@ -1,9 +1,12 @@
-# the grid made for the tic-tac-toe
-grid = [["1", "2", "3"],
-        ["4", "5", "6"],
-        ["7", "8", "9"]]
+# MAIN TIC-TAC-TOE GRID
+grid = [
+    ["1", "2", "3"],
+    ["4", "5", "6"],
+    ["7", "8", "9"]
+]
 
-# All the winning combinations that could be like having like the winning combination
+# WINNING COMBINATIONS
+
 winning_combination = [
     # Rows
     [(0, 0), (0, 1), (0, 2)],
@@ -15,29 +18,31 @@ winning_combination = [
     [(0, 1), (1, 1), (2, 1)],
     [(0, 2), (1, 2), (2, 2)],
 
-    # Diagonal
+    # Diagonals
     [(0, 0), (1, 1), (2, 2)],
     [(0, 2), (1, 1), (2, 0)]
 ]
 
 
+# The main function to CHECK WIN
 def check_win(ltr):
     for combo in winning_combination:
         if all(grid[row][column] == ltr for row, column in combo):
             return True
+
     return False
 
 
+# The main function to CHECK TIE
 def check_tie():
     for row in grid:
         for cell in row:
-            if cell in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
+            if cell not in ("X", "O"):
                 return False
+    return not check_win("X") and not check_win("O")
 
-    return True
 
-
-# function to print the grid for the tic-tac-toe
+# The function to PRINT GRID
 def print_grid():
     print(grid[0])
     print("...............")
@@ -46,26 +51,31 @@ def print_grid():
     print(grid[2])
 
 
+# The function to RESET GRID
+
 def reset_grid():
-    return [["1", "2", "3"],
-            ["4", "5", "6"],
-            ["7", "8", "9"]]
+    return [
+        ["1", "2", "3"],
+        ["4", "5", "6"],
+        ["7", "8", "9"]
+    ]
 
 
+# The function to PUT X or O in this game
 
-#
 def put_letter(ltr, pos):
     positions = {
-        "1": (0,0),
-        "2": (0,1),
-        "3": (0,2),
-        "4": (1,0),
-        "5": (1,1),
-        "6": (1,2),
-        "7": (2,0),
-        "8": (2,1),
-        "9": (2,2)
+        "1": (0, 0),
+        "2": (0, 1),
+        "3": (0, 2),
+        "4": (1, 0),
+        "5": (1, 1),
+        "6": (1, 2),
+        "7": (2, 0),
+        "8": (2, 1),
+        "9": (2, 2)
     }
+
     if pos not in positions:
         return False
 
@@ -75,75 +85,123 @@ def put_letter(ltr, pos):
         return False
 
     grid[row][column] = ltr
+
     return True
 
 
+# SINGLE MATCH
 
-
-# the main function for like tic-tac-toe
-# this is going to have like the whole tic-tac-toe in it
 def tic_tac_toe():
-    Notwin = True
-    while Notwin:
+    while True:
+
         print_grid()
-        Xpos = input("choose where to put X:")
-        if not put_letter("X", Xpos):
-            print_grid()
-            print("please choose correct value")
-            Xpos2 = input("choose where to put X:")
-            put_letter("X", Xpos2)
+
+        while True:
+            Xpos = input("Choose where to put X: ")
+
+            if put_letter("X", Xpos):
+                break
+
+            print("Please choose a valid and empty position.")
+
         if check_win("X"):
-            print("X wins")
-            break
-        if check_tie():
-            print("it is a TIEEE!!!")
-            break
-        print_grid()
-        Opos = input("choose where to put O:")
-        if not put_letter("O", Opos):
             print_grid()
-            print("please choose correct value")
-            Opos2 = input("choose where to put O:")
-            put_letter("O", Opos2)
-        if check_win("O"):
-            print("O wins")
-            break
+            print("X wins!")
+            return "X"
+
         if check_tie():
-            print("it is a TIEEE!!!")
-            break
+            print_grid()
+            print("It is a TIEEE!!!")
+            return "tie"
+
+        print_grid()
+
+        while True:
+            Opos = input("Choose where to put O: ")
+
+            if put_letter("O", Opos):
+                break
+
+            print("Please choose a valid and empty position.")
+
+        if check_win("O"):
+            print_grid()
+            print("O wins!")
+            return "O"
+
+        if check_tie():
+            print_grid()
+            print("It is a TIEEE!!!")
+            return "tie"
 
 
-match_style = input("enter the numeric values \n"
-                    "1: Single\n"
-                    "2: Tournument\n"
-                    "Enter:")
+# GAME MODE
+
+match_style = input(
+    "Enter the numeric value:\n"
+    "1: Single\n"
+    "2: Tournament\n"
+    "Enter: "
+)
+
+# SINGLE MODE
 
 if match_style == "1":
+
     tic_tac_toe()
-if match_style == "2":
-    matchesnum = int(input("Enter the number of maches you want to play:"))
+
+
+# TOURNAMENT MODE
+
+elif match_style == "2":
+
+    while True:
+        try:
+            matchesnum = int(input("How many matches do you want to play? "))
+            if matchesnum > 0:
+                break
+            print("Enter a number greater than zero.")
+        except ValueError:
+            print("Please enter a whole number.")
+
     Xpoints = 0
     Opoints = 0
     ties = 0
+
     for i in range(matchesnum):
-        tic_tac_toe()
-        if check_win("X"):
+
+        print(f"\n========== MATCH {i + 1} ==========\n")
+
+        result = tic_tac_toe()
+
+        # Store the result
+        if result == "X":
             Xpoints += 1
-        elif check_win("O"):
+
+        elif result == "O":
             Opoints += 1
-        elif check_tie():
+
+        elif result == "tie":
             ties += 1
 
-        print("| Players | Points |")
-        print(f"|   X     | {Xpoints} |")
-        print(f"|   O     | {Opoints} |")
-        print(f"| Tie     | {ties} |")
+        # Display current score
+        print("\n| Players | Points |")
+        print(f"| X       | {Xpoints}      |")
+        print(f"| O       | {Opoints}      |")
+        print(f"| Ties    | {ties}      |")
 
+        # Resetting  the board for the next match
         grid = reset_grid()
 
+    # TOURNAMENT WINNER
+
+    print("\n TOURNAMENT RESULT ")
+
     if Xpoints > Opoints:
-        print("x wins")
-    if Opoints > Xpoints:
-        print("O wins")
-    if Xpoints == Opoints:
-        print("its a draw")
+        print("X wins the tournament!")
+
+    elif Opoints > Xpoints:
+        print("O wins the tournament!")
+
+    else:
+        print("The tournament is a draw!")
